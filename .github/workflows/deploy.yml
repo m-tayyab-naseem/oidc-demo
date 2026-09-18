@@ -39,6 +39,13 @@ jobs:
         run: |
           aws sts get-caller-identity
 
+      - name: Debug S3 Target and List Buckets
+        run: |
+          echo "Target bucket length: ${#S3_BUCKET}"
+          aws s3 ls
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+
       - name: Sync static files to S3
         run: |
           aws s3 sync ./public s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
