@@ -1,0 +1,34 @@
+name: CI/CD S3 Deploy via OIDC
+
+on:
+  push:
+    branches:
+      - main
+
+# Required for the OIDC token exchange
+permissions:
+  id-token: write   # Allows requesting the JWT ID token from GitHub OIDC provider
+  contents: read    # Allows checking out the repo code
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          audience: sts.amazonaws.com
+
+      - name: Verify Assumed Identity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Sync static files to S3
+        run: |
+          aws s3 sync ./public s3://${{ vars.S3_BUCKET_NAME }}/ --delete
