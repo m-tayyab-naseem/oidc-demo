@@ -21,8 +21,8 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
           audience: sts.amazonaws.com
 
       - name: Verify Assumed Identity
@@ -31,4 +31,4 @@ jobs:
 
       - name: Sync static files to S3
         run: |
-          aws s3 sync ./public s3://${{ vars.S3_BUCKET_NAME }}/ --delete
+          aws s3 sync ./public s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
