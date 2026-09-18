@@ -5,14 +5,14 @@ on:
     branches:
       - main
 
-# Required for the OIDC token exchange
-permissions:
-  id-token: write   # Allows requesting the JWT ID token from GitHub OIDC provider
-  contents: read    # Allows checking out the repo code
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Required for the OIDC token exchange
+    permissions:
+      id-token: write   # Allows requesting the JWT ID token from GitHub OIDC provider
+      contents: read    # Allows checking out the repo code
 
     steps:
       - name: Checkout repository
